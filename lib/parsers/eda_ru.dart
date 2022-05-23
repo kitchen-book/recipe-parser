@@ -4,8 +4,8 @@ import 'package:collection/collection.dart';
 import 'package:beautiful_soup_dart/beautiful_soup.dart';
 import 'package:http/http.dart' as http;
 
-import '../model/ingredient.dart';
-import '../model/recipe.dart';
+import '../models/ingredient.dart';
+import '../models/recipe.dart';
 import '../utils.dart';
 
 class EdaRuParser {

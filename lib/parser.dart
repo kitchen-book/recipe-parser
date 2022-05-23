@@ -1,5 +1,6 @@
+library parser;
 import 'parsers/eda_ru.dart';
-import 'model/recipe.dart';
+import 'models/recipe.dart';
 
 const spaghettiLink =
     'https://eda.ru/recepty/pasta-picca/spagetti-karbonara-s-krasnym-lukom-17614';
@@ -23,9 +24,9 @@ void main(List<String> arguments) async {
 
 class Parser {
   final String link;
-  
+
   Parser({required this.link});
-  
+
   Future<ParseResult> parse() async {
     if (link.contains('eda.ru')) {
       return await EdaRuParser(link: link).parseRecipe();
