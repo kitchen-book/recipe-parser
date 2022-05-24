@@ -1,14 +1,13 @@
 import 'ingredient.dart';
 
-class ParseResult {}
+class ParseResult {
+  final String? error;
+  final Recipe? recipe;
 
-class ParseError extends ParseResult{
-  final String error;
-
-  ParseError({required this.error});
+  ParseResult({this.error, this.recipe});
 }
 
-class Recipe extends ParseResult{
+class Recipe {
   final List<String>? images;
   final String title;
   final int? time;

@@ -18,7 +18,7 @@ class EdaRuParser {
       Uri.parse(link),
     );
     if (response.statusCode != 200) {
-      return ParseError(error: 'Failed request with response status code ${response.statusCode}');
+      return ParseResult(error: 'Failed request with response status code ${response.statusCode}');
     }
 
     final soup = BeautifulSoup(
@@ -64,16 +64,18 @@ class EdaRuParser {
         .toList();
 
 
-    return Recipe(
-      images: image != null ? [image] : [],
-      title: title ?? '',
-      time: Utils.convertTime(time ?? ''),
-      calories: calories ?? 0,
-      description: description ?? '',
-      link: link,
-      portions: portions ?? 0,
-      ingredients: ingredients,
-      steps: steps,
+    return ParseResult(
+      recipe: Recipe(
+        images: image != null ? [image] : [],
+        title: title ?? '',
+        time: Utils.convertTime(time ?? ''),
+        calories: calories ?? 0,
+        description: description ?? '',
+        link: link,
+        portions: portions ?? 0,
+        ingredients: ingredients,
+        steps: steps,
+      )
     );
   }
 

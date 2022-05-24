@@ -8,8 +8,9 @@ const brownieLink =
     'https://eda.ru/recepty/vypechka-deserty/brauni-brownie-20955';
 
 void main(List<String> arguments) async {
-  final recipe = await EdaRuParser(link: spaghettiLink).parseRecipe();
-  if (recipe is Recipe) {
+  final result = await EdaRuParser(link: spaghettiLink).parseRecipe();
+  if (result.recipe != null) {
+    final recipe = result.recipe!;
     print(recipe.images);
     print(recipe.title);
     print(recipe.time);
@@ -31,7 +32,7 @@ class Parser {
     if (link.contains('eda.ru')) {
       return await EdaRuParser(link: link).parseRecipe();
     }
-    return ParseError(error: 'We do not have parser for this site');
+    return ParseResult(error: 'We do not have parser for this site');
   }
 }
 
