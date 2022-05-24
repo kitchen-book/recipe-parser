@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:beautiful_soup_dart/beautiful_soup.dart';
@@ -18,7 +19,9 @@ class EdaRuParser {
       Uri.parse(link),
     );
     if (response.statusCode != 200) {
-      return ParseResult(error: 'Failed request with response status code ${response.statusCode}');
+      return ParseResult(
+          error:
+              'Failed request with response status code ${response.statusCode}');
     }
 
     final soup = BeautifulSoup(
@@ -29,12 +32,16 @@ class EdaRuParser {
         .find('img', attrs: {'alt': 'Изображение материала'})
         ?.attributes['src']
         ?.replaceAll('c88x88', '900x-');
+    final uint8List = (image != null)
+        ? await http.get(Uri.parse(image)).then((value) => value.bodyBytes)
+        : Uint8List.fromList([]);
 
     final title = soup.find('h1', class_: 'emotion-gl52ge')?.text;
 
     final time = soup.find('div', class_: 'emotion-my9yfq')?.text;
 
-    final calories = int.tryParse(soup.find('span', attrs: {'itemprop': 'calories'})?.text ?? '');
+    final calories = int.tryParse(
+        soup.find('span', attrs: {'itemprop': 'calories'})?.text ?? '');
 
     final description = soup.find('span', class_: 'emotion-1x1q7i2')?.text;
 
@@ -63,20 +70,18 @@ class EdaRuParser {
         .map((step) => step.text)
         .toList();
 
-
     return ParseResult(
-      recipe: Recipe(
-        images: image != null ? [image] : [],
-        title: title ?? '',
-        time: Utils.convertTime(time ?? ''),
-        calories: calories ?? 0,
-        description: description ?? '',
-        link: link,
-        portions: portions ?? 0,
-        ingredients: ingredients,
-        steps: steps,
-      )
-    );
+        recipe: Recipe(
+      images: [uint8List],
+      title: title ?? '',
+      time: Utils.convertTime(time ?? ''),
+      calories: calories ?? 0,
+      description: description ?? '',
+      link: link,
+      portions: portions ?? 0,
+      ingredients: ingredients,
+      steps: steps,
+    ));
   }
 
   Ingredient _createIngredient(String ingredient, String rawNumber) {
@@ -101,7 +106,7 @@ class EdaRuParser {
     if (parsedUnit.contains('столов')) {
       return 'ст.л';
     }
-    if (parsedUnit.contains('чайн')){
+    if (parsedUnit.contains('чайн')) {
       return 'ч.л';
     }
     return 'шт';

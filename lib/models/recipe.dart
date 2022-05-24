@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'ingredient.dart';
 
 class ParseResult {
@@ -8,7 +10,7 @@ class ParseResult {
 }
 
 class Recipe {
-  final List<String>? images;
+  final List<Uint8List?> images;
   final String title;
   final int? time;
   final int? calories;
@@ -16,20 +18,20 @@ class Recipe {
   final String link;
 
   final int portions;
-  final List<Ingredient>? ingredients;
+  final List<Ingredient?> ingredients;
 
-  final List<String>? steps;
+  final List<String?> steps;
 
   Recipe({
-    this.images,
+    required this.images,
     required this.title,
     this.time,
     this.calories,
     this.description,
     required this.link,
     required this.portions,
-    this.ingredients,
-    this.steps,
+    required this.ingredients,
+    required this.steps,
   });
 
   @override
