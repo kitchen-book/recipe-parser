@@ -10,7 +10,7 @@ class ParseResult {
 }
 
 class Recipe {
-  final List<Uint8List?> images;
+  final List<Uint8List> images;
   final String title;
   final int? time;
   final int? calories;
@@ -18,9 +18,9 @@ class Recipe {
   final String link;
 
   final int portions;
-  final List<Ingredient?> ingredients;
+  final List<Ingredient> ingredients;
 
-  final List<String?> steps;
+  final List<String> steps;
 
   Recipe({
     required this.images,
