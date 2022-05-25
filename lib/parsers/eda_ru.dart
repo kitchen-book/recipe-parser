@@ -86,7 +86,7 @@ class EdaRuParser {
         : _getUnit(listNumber.sublist(1).join(' '));
     return Ingredient(
       title: ingredient,
-      number: number,
+      number: number ?? 1,
       unit: unit,
     );
   }
