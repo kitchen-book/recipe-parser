@@ -14,18 +14,25 @@ class Utils {
   ];
 
   static int convertTime(String rawTime) {
-    int time = 0;
-    List listTime = rawTime.split(' ');
-    if (rawTime.contains('час')) {
-      final hours = int.parse(listTime.first);
-      listTime = listTime.sublist(2);
-      time += hours * 60;
-    }
-    if (rawTime.contains('минут')) {
-      final minutes = int.parse(listTime.first);
-      time += minutes;
+    try {
+      int time = 0;
+      List listTime = rawTime.split(' ');
+      listTime.removeWhere((time) => time == '');
+      if (rawTime.contains('час')) {
+        final hours = int.parse(listTime.first);
+        listTime = listTime.sublist(2);
+        time += hours * 60;
+      }
+      if (rawTime.contains('минут')) {
+        final minutes = int.parse(listTime.first);
+        time += minutes;
+      }
+
+      return time.ceil();
+    } catch (e) {
+      print(e);
+      rethrow;
     }
 
-    return time.ceil();
   }
 }

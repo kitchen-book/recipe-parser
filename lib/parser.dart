@@ -9,7 +9,7 @@ import 'parsers/eda_ru.dart';
 import 'package:http/http.dart' as http;
 
 const spaghettiLink =
-    'https://eda.ru/recepty/salaty/ostry-salat-iz-kvashenno-kapusty-s-chesnokom-152311';
+    'https://eda.ru/recepty/osnovnye-blyuda/ferganskiy-plov-27690';
 const brownieLink =
     'https://eda.ru/recepty/vypechka-deserty/brauni-brownie-20955';
 
@@ -30,7 +30,8 @@ void main(List<String> arguments) async {
     print(recipe.ingredients);
     print(recipe.steps);
   } else {
-    print(result.error);
+    // print(result.error?.title);
+    print('d');
   }
 }
 
@@ -74,10 +75,10 @@ class Parser {
             content: 'Включите его в настройках.',
           ),
         );
-      } catch (_) {
+      } catch (e) {
         return ParseResult(
           error: ParseError(
-            title: 'Что-то пошло не так.',
+            title: e.toString(),
             content: 'Попробуйте позже.',
           ),
         );
