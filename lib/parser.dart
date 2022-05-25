@@ -3,6 +3,7 @@ library parser;
 import 'dart:async';
 import 'dart:io';
 
+import 'models/parse_error.dart';
 import 'models/parse_result.dart';
 import 'parsers/eda_ru.dart';
 import 'package:http/http.dart' as http;
@@ -53,32 +54,39 @@ class Parser {
           }
         } else {
           return ParseResult(
-            error: Error(
-                title: 'Невозможно получить данные.',
-                content: 'Попробуйте позже.'),
+            error: ParseError(
+              title: 'Невозможно получить данные.',
+              content: 'Попробуйте позже.',
+            ),
           );
         }
       } on TimeoutException catch (_) {
         return ParseResult(
-          error: Error(
-              title: 'Истекло время ожидания сайта.',
-              content: 'Попробуйте позже.'),
+          error: ParseError(
+            title: 'Истекло время ожидания сайта.',
+            content: 'Попробуйте позже.',
+          ),
         );
       } on SocketException catch (_) {
         return ParseResult(
-          error: Error(
-              title: 'Для загрузки рецепта нужен интернет.',
-              content: 'Включите его в настройках.'),
+          error: ParseError(
+            title: 'Для загрузки рецепта нужен интернет.',
+            content: 'Включите его в настройках.',
+          ),
         );
       } catch (_) {
         return ParseResult(
-          error: Error(
-              title: 'Что-то пошло не так.', content: 'Попробуйте позже.'),
+          error: ParseError(
+            title: 'Что-то пошло не так.',
+            content: 'Попробуйте позже.',
+          ),
         );
       }
     }
     return ParseResult(
-      error: Error(title: 'У нас нет парсера для этого сайта.'),
+      error: ParseError(
+        title: 'У нас нет парсера для этого сайта.',
+      ),
     );
   }
 }
