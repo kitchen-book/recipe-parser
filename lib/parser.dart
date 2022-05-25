@@ -3,8 +3,8 @@ library parser;
 import 'dart:async';
 import 'dart:io';
 
+import 'models/parse_result.dart';
 import 'parsers/eda_ru.dart';
-import 'models/recipe.dart';
 import 'package:http/http.dart' as http;
 
 const spaghettiLink =
@@ -41,8 +41,7 @@ class Parser {
   Future<ParseResult> parse() async {
     if (availableSites.any((site) => link.contains(site))) {
       try {
-        final response =
-            await http.get(Uri.parse(link));
+        final response = await http.get(Uri.parse(link));
         if (response.statusCode == 200) {
           if (link.contains('eda.ru')) {
             return ParseResult(
@@ -54,19 +53,32 @@ class Parser {
           }
         } else {
           return ParseResult(
-              error: 'Невозможно получить данные.\nПопробуйте позже.');
+            error: Error(
+                title: 'Невозможно получить данные.',
+                content: 'Попробуйте позже.'),
+          );
         }
       } on TimeoutException catch (_) {
         return ParseResult(
-            error: 'Истекло время ожидания сайта.\nПопробуйте позже.');
+          error: Error(
+              title: 'Истекло время ожидания сайта.',
+              content: 'Попробуйте позже.'),
+        );
       } on SocketException catch (_) {
         return ParseResult(
-            error:
-                'Для загрузки рецепта нужен интернет.\nВключите его в настройках.');
+          error: Error(
+              title: 'Для загрузки рецепта нужен интернет.',
+              content: 'Включите его в настройках.'),
+        );
       } catch (_) {
-        return ParseResult(error: 'Что-то пошло не так.\nПопробуйте позже.');
+        return ParseResult(
+          error: Error(
+              title: 'Что-то пошло не так.', content: 'Попробуйте позже.'),
+        );
       }
     }
-    return ParseResult(error: 'У нас нет парсера для этого сайта.');
+    return ParseResult(
+      error: Error(title: 'У нас нет парсера для этого сайта.'),
+    );
   }
 }

@@ -2,13 +2,6 @@ import 'dart:typed_data';
 
 import 'ingredient.dart';
 
-class ParseResult {
-  final String? error;
-  final Recipe? recipe;
-
-  ParseResult({this.error, this.recipe});
-}
-
 class Recipe {
   final List<Uint8List> images;
   final String title;
