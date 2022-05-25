@@ -81,7 +81,9 @@ class EdaRuParser {
   Ingredient _createIngredient(String ingredient, String rawNumber) {
     final listNumber = rawNumber.split(' ');
     final number = double.tryParse(listNumber.first.replaceFirst(',', '.'));
-    final unit = _getUnit(listNumber.sublist(1).join(' '));
+    final unit = (number == null)
+        ? _getUnit(rawNumber)
+        : _getUnit(listNumber.sublist(1).join(' '));
     return Ingredient(
       title: ingredient,
       number: number,
@@ -92,6 +94,9 @@ class EdaRuParser {
   String _getUnit(String parsedUnit) {
     if (Utils.units.contains(parsedUnit)) {
       return parsedUnit;
+    }
+    if (parsedUnit.contains('щепот')) {
+      return 'щепот.';
     }
     if (parsedUnit.contains('столов')) {
       return 'ст.л';
