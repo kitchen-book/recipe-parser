@@ -3,27 +3,22 @@ import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:beautiful_soup_dart/beautiful_soup.dart';
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 
 import '../models/ingredient.dart';
 import '../models/recipe.dart';
 import '../utils.dart';
 
 class EdaRuParser {
+  final Response response;
   final String link;
 
-  EdaRuParser({required this.link});
+  EdaRuParser({
+    required this.response,
+    required this.link,
+  });
 
-  Future<ParseResult> parseRecipe() async {
-    final response = await http.get(
-      Uri.parse(link),
-    );
-    if (response.statusCode != 200) {
-      return ParseResult(
-          error:
-              'Failed request with response status code ${response.statusCode}');
-    }
-
+  Future<Recipe> parseRecipe() async {
     final soup = BeautifulSoup(
       utf8.decode(response.bodyBytes),
     );
@@ -33,7 +28,7 @@ class EdaRuParser {
         ?.attributes['src']
         ?.replaceAll('c88x88', '900x-');
     final uint8List = (image != null)
-        ? await http.get(Uri.parse(image)).then((value) => value.bodyBytes)
+        ? await get(Uri.parse(image)).then((value) => value.bodyBytes)
         : Uint8List.fromList([]);
 
     final title = soup.find('h1', class_: 'emotion-gl52ge')?.text;
@@ -70,8 +65,7 @@ class EdaRuParser {
         .map((step) => step.text)
         .toList();
 
-    return ParseResult(
-        recipe: Recipe(
+    return Recipe(
       images: [uint8List],
       title: title ?? '',
       time: Utils.convertTime(time ?? ''),
@@ -81,19 +75,15 @@ class EdaRuParser {
       portions: portions ?? 0,
       ingredients: ingredients,
       steps: steps,
-    ));
+    );
   }
 
   Ingredient _createIngredient(String ingredient, String rawNumber) {
     final listNumber = rawNumber.split(' ');
-    final number = double.tryParse(listNumber.first);
-    if (number == null) {
-      final unit = _getUnit(rawNumber);
-      return Ingredient(ingredient: ingredient, unit: unit);
-    }
+    final number = double.tryParse(listNumber.first.replaceFirst(',', '.'));
     final unit = _getUnit(listNumber.sublist(1).join(' '));
     return Ingredient(
-      ingredient: ingredient,
+      title: ingredient,
       number: number,
       unit: unit,
     );
